@@ -7,7 +7,7 @@ import log from './log';
 const defaultConfig = {
 	customPurposeListLocation: '../cmp/src/docs/assets/purposes.json',
 	// The location of the latest vendorlist to use.
-	globalVendorListLocation: '../cmp/src/docs/assets/anixe_vendorlist.json',
+	globalVendorListLocation: '../cmp_demo/getLatestVendorList.php',
 	globalConsentLocation: './index.html',
 	storeConsentGlobally: false,
 	storePublisherData: false,
@@ -16,7 +16,7 @@ const defaultConfig = {
 	forceLocale: null,
 	gdprApplies: true,
 	gdprAppliesGlobally: false,
-	allowedVendorIds: null,
+	allowedVendorIds: ["47","126"],
 	theme: {}
 };
 

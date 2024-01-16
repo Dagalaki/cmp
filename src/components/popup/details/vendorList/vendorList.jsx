@@ -142,7 +142,7 @@ export default class VendorList extends Component {
 				</div>
 				<a id="customize" onClick={onBack} style={{color: textLinkColor}} class={style.customize}><LocalLabel localizeKey='back'></LocalLabel></a>
 				<table>
-					{vendors.map(({name, policyUrl, legIntPurposeIds, featureIds, purposeIds}, index) => (
+					{Object.values(vendors).map(({name, policyUrl, legIntPurposeIds, featureIds, purposes:purposeIds, flexiblePurposes, specialPurposes, specialFeatures}, index) => (
 						<tr class={index % 2 === 0 ? style.even : style.odd}>
 							<td>
 								<div 

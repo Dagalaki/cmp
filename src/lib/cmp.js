@@ -3,7 +3,7 @@ import config from './config';
 import { encodeVendorConsentData } from './cookie/cookie';
 import { encodeVendorCookieValue, encodePublisherCookieValue } from "./cookie/cookieutils";
 
-export const CMP_GLOBAL_NAME = '__cmp';
+export const CMP_GLOBAL_NAME = '__tcfapi';
 export const CMP_CALL_NAME = CMP_GLOBAL_NAME + 'Call';
 export const CMP_LOCATOR_NAME = CMP_GLOBAL_NAME + 'Locator';
 const CMP_RETURN_NAME = CMP_GLOBAL_NAME + 'Return';

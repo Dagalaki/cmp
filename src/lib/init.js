@@ -50,10 +50,10 @@ export function init(configUpdates) {
 				allowedVendorIds
 			});
 			console.log("[CMP LOG] VENDOR CONSENT DATA", vendorConsentData);
-			// Pull queued command from __cmp stub
+			// Pull queued command from __tcfapi stub
 			const {commandQueue = []} = window[CMP_GLOBAL_NAME] || {};
 
-			// Replace the __cmp with our implementation
+			// Replace the __tcfapi with our implementation
 			const cmp = new Cmp(store);
 
 			// Expose `processCommand` as the CMP implementation

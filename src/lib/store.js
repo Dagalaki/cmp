@@ -108,8 +108,9 @@ export default class Store {
 		} else {
 			// In case the vendor list has not been loaded yet find the highest
 			// vendor ID to map any consent data we already have
+			var vendorArray = Object.values(vendors);
 			const lastVendorId = Math.max(maxVendorId,
-				...vendors.map(({id}) => id),
+				...vendorArray.map(({id}) => id),
 				...Array.from(selectedVendorIds)
 			);
 
@@ -121,7 +122,7 @@ export default class Store {
 
 		// Map all purpose IDs
 		const lastPurposeId = Math.max(
-			...purposes.map(({id}) => id),
+			...Object.values(purposes).map(({id}) => id),
 			...Array.from(selectedPurposeIds)
 		);
 
@@ -171,7 +172,7 @@ export default class Store {
 		const {purposes: customPurposes = []} = customPurposeList;
 
 		const lastStandardPurposeId = Math.max(
-			...purposes.map(({id}) => id),
+			...Object.values(purposes).map(({id}) => id),
 			...Array.from(selectedPurposeIds)
 		);
 
@@ -278,10 +279,11 @@ export default class Store {
 	};
 	selectAllVendors = (isSelected, purposeId) => {
 		console.log("store.js : selectAllVendors");
-		const {vendors = []} = this.vendorList || {};
+		const {vendors = {}} = this.vendorList || {};
+		const vendorArray = Object.values(vendors);
 		const operation = isSelected ? 'add' : 'delete';
 		//console.log("VENDORS BEFORE", "PURPOSE", purposeId, "LIST", this.vendorConsentData.selectedVendorIds);
-		vendors.forEach(({id, purposeIds = []}) => {
+		vendorArray.forEach(({id, purposeIds = []}) => {
 			// If a purposeId is supplied only toggle vendors that support that purpose
 			if (typeof purposeId !== 'number' || purposeIds.indexOf(purposeId) > -1) {
 				this.vendorConsentData.selectedVendorIds[operation](id);
@@ -363,25 +365,34 @@ export default class Store {
 
 		// Filter vendors in vendorList by allowedVendorIds
 		if (vendorList && vendorList.vendors && allowedVendorIds.size) {
-			vendorList.vendors = vendorList.vendors.filter(({id}) => allowedVendorIds.has(id));
+			const vendorIds = Object.keys(vendorList.vendors);
+			const filteredVendorIds = vendorIds.filter(id => allowedVendorIds.has(id));
+			const filteredVendors = {};
+			filteredVendorIds.forEach(id => {
+				filteredVendors[id] = vendorList.vendors[id];
+			});
+			vendorList.vendors = filteredVendors;
+			//vendorList.vendors = vendorList.vendors.filter(({id}) => allowedVendorIds.has(id));
 		}
 
 		const {
 			vendors = [],
-			purposes = [],
+			purposes = {},
 		} = vendorList || {};
 
+		const purposesArray = Object.values(purposes);
 		// If vendor consent data has never been persisted set default selected status
 		if (!created) {
-			this.vendorConsentData.selectedPurposeIds = new Set(purposes.map(p => p.id));
-			this.vendorConsentData.selectedVendorIds = new Set(vendors.map(v => v.id));
+			this.vendorConsentData.selectedPurposeIds = new Set(purposesArray.map(p => p.id));
+			const vendorsArray = Object.values(vendors);
+			this.vendorConsentData.selectedVendorIds = new Set(vendorsArray.map(v => v.id));
 		}
 
 		const {selectedVendorIds = new Set()} = this.vendorConsentData;
 
 		// Find the maxVendorId out of the vendor list and selectedVendorIds
 		this.vendorConsentData.maxVendorId = Math.max(maxVendorId,
-			...vendors.map(({id}) => id),
+			...Object.values(vendors).map(({id}) => id),
 			...Array.from(selectedVendorIds)
 		);
 		this.vendorList = vendorList;
@@ -394,7 +405,7 @@ export default class Store {
 		// If publisher consent has never been persisted set the default selected status
 		if (!created) {
 			const {purposes = [], } = customPurposeList || {};
-			this.publisherConsentData.selectedCustomPurposeIds = new Set(purposes.map(p => p.id));
+			this.publisherConsentData.selectedCustomPurposeIds = new Set(Object.values(purposes).map(p => p.id));
 		}
 
 		const {version = 1} = customPurposeList || {};
